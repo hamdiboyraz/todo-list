@@ -31,11 +31,23 @@ def updateTask(request, pk):
     return render(request, 'update_task.html', context)
 
 def deleteTask(request, pk):
-    item  = Task.objects.get(id=pk) # get item by id-primary key
+    task  = Task.objects.get(id=pk) # get item by id-primary key
 
     if request.method == 'POST':
-        item.delete()
+        task.delete()
         return redirect('/')
 
-    context = {'item':item} # refers to {{ item }} in delete.html
+    context = {'item':task} # refers to {{ item }} in delete.html
     return render(request, 'delete.html', context)
+
+def done(request, pk):
+    item  = Task.objects.get(id=pk)
+    
+    if item.complete == True:
+        item.complete = False
+    else:
+        item.complete = True
+    item.save()
+    
+    return redirect('/')
+
