@@ -12,7 +12,20 @@ def index(request):
         form = TaskForm(request.POST)
         if form.is_valid():
             form.save()
-        return redirect('/')
+        return redirect('/') # Should be '/', not ''
 
     context = {'tasks':tasks, 'form':form}
     return render(request, 'list.html', context)
+
+def updateTask(request, pk):
+    task = Task.objects.get(id=pk)
+    form = TaskForm(instance=task) # Instance provides retrieving same item 
+
+    if request.method == 'POST':
+        form = TaskForm(request.POST, instance=task)
+        if form.is_valid():
+            form.save()
+        return redirect('/')
+
+    context = {'form':form}
+    return render(request, 'update_task.html', context)
